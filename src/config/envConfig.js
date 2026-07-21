@@ -15,12 +15,14 @@ if (environment === "development") {
 
 const PORT = process.env.PORT;
 const MONGOOSE_URL = process.env.MONGOOSE_URL;
+const SECRET_STRING = process.env.SECRET_STRING
 
 
 
 const envConfig = {
     PORT,
-    MONGOOSE_URL
+    MONGOOSE_URL,
+    SECRET_STRING
 };
 
 module.exports = envConfig;
