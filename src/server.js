@@ -11,8 +11,7 @@ const app = express();
 app.use(express.json());
 
 app.use('/', async (req, res) => {
-
-
+    
     return res.send("Server is Working......");
 })
 

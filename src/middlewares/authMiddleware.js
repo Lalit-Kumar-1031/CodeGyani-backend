@@ -3,6 +3,7 @@ const envConfig = require('../config/envConfig.js');
 const catchAsync = require('../utils/catchAsync.js');
 const statusCodes = require('../utils/statusCodes');
 const { failure_response } = require('../utils/response');
+const AppError = require('../utils/appError.js');
 
 
 const verifyToken = catchAsync(async (req, res, next) => {
@@ -10,13 +11,13 @@ const verifyToken = catchAsync(async (req, res, next) => {
         const token = req.headers['authorization'].split()[1];
 
         if (!token) {
-            throw new Error("Token is Required");
+            throw new AppError(statusCodes.UNAUTHORIZED, "Token Not Found");
         };
 
         const verify = await jwt.verify(token, envConfig.SECRET_STRING);
 
         if (!verify) {
-            throw new Error("UnAuthorized Token!")
+            throw new Error(statusCodes > statusCodes.FORBIDDEN, "Invalid Token!")
         };
 
         req.user = jwt.decode(token);
