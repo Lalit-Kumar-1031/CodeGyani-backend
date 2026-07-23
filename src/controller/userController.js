@@ -8,6 +8,7 @@ const { failure_response, success_response } = require('../utils/response.js');
 const statusCodes = require('../utils/statusCodes.js');
 const { validateEmail, validateStrongPassword } = require('../utils/validation.js');
 const zodSchemas = require('../utils/zodSchemas.js');
+const zodSchemaValidator = require('../utils/zodSchemaValidator.js');
 
 
 const login = catchAsync(async (req, res) => {
@@ -67,9 +68,7 @@ const createUser = catchAsync(async (req, res) => {
             password,
         } = req.body
 
-        let res;
-
-        const data = zodSchemaValidator(zodSchemas.userRegistrationSchema, req.body, res);
+        const data = zodSchemaValidator(zodSchemas.userRegistrationSchema, req.body);
 
         const payload = await services.userService.createUser(data);
 
@@ -78,7 +77,6 @@ const createUser = catchAsync(async (req, res) => {
                 statusCodes.CREATED,
                 "Successfully Created User",
                 payload,
-                true
             )
         )
 
@@ -91,7 +89,6 @@ const createUser = catchAsync(async (req, res) => {
                 error?.statusCode || statusCodes.INTERNAL_SERVER_ERROR,
                 "Failed to Create User",
                 { message: error?.message },
-                false
             )
         )
     }
@@ -99,7 +96,8 @@ const createUser = catchAsync(async (req, res) => {
 
 
 const userController = {
-    login
+    createUser,
+    login,
 };
 
 module.exports = userController;

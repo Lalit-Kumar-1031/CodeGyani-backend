@@ -1,6 +1,7 @@
 const { generateUserId } = require("../helpers/generateIds");
 const { User } = require("../models");
 const AppError = require("../utils/appError");
+const { encrypt } = require("../utils/crypto");
 
 class UserService {
 
@@ -9,7 +10,18 @@ class UserService {
 
             const customId = generateUserId(data?.role);
 
-            const userPayload = { ...data, customId };
+            const passwordHash = await encrypt(data?.password);
+
+            const userPayload = {
+                fullName: data?.fullName,
+                email: data?.email,
+                dateOfBirth: data?.dateOfBirth,
+                mobileNumber: data?.mobileNumber,
+                gender: data?.gender,
+                role: data?.role,
+                customId,
+                passwordHash
+            }
 
             const user = await User.create(userPayload);
 

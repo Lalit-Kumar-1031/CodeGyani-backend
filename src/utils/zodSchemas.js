@@ -36,11 +36,11 @@ const userRegistrationSchema = z.object({
         .refine((val) => /^[6-9]\d{9}$/.test(val), "Please enter a valid 10-digit Indian mobile number")
         .transform((val) => `+91${val}`),
 
-    gender: z.enum(["male", "female", "other"], {
+    gender: z.enum(["MALE", "FEMALE", "OTHERS"], {
         errorMap: () => ({ message: "Gender must be male, female, or other" }),
     }),
 
-    role: z.enum(["student", "instructor", "admin"], {
+    role: z.enum(["STUDENT", "ADMIN",], {
         errorMap: () => ({ message: "Invalid role specified" }),
     }),
 

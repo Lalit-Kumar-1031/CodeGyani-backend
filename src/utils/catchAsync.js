@@ -3,7 +3,7 @@ const statusCodes = require("./statusCodes");
 
 
 
-const catchAsync = (controller) = async (req, res, next) => {
+const catchAsync = (controller) => async (req, res, next) => {
     try {
         await controller(req, res, next);
     } catch (error) {
@@ -13,7 +13,6 @@ const catchAsync = (controller) = async (req, res, next) => {
                 statusCodes.INTERNAL_SERVER_ERROR,
                 message,
                 { message: error?.message },
-                false
             )
         )
     }

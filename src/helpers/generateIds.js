@@ -27,7 +27,7 @@ const generateUserId = (role) => {
         suffix += str.charAt(Math.ceil(Math.random() * str.length));
     }
 
-    return `${prefix}-${getYear}${month}${today}-${suffix}`
+    return `${prefix}-${year}${month}${today}-${suffix}`
 };
 
 module.exports = {
