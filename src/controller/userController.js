@@ -6,7 +6,8 @@ const { decrypt } = require('../utils/crypto.js');
 const signin = require('../utils/jwt.js');
 const { failure_response, success_response } = require('../utils/response.js');
 const statusCodes = require('../utils/statusCodes.js');
-const { validateEmail, validateStrongPassword } = require('../utils/validation.js');
+const validations = require('../utils/validation.js');
+const { validateEmail, validateStrongPassword, emailRegex } = require('../utils/validation.js');
 const zodSchemas = require('../utils/zodSchemas.js');
 const zodSchemaValidator = require('../utils/zodSchemaValidator.js');
 
@@ -16,29 +17,22 @@ const login = catchAsync(async (req, res) => {
 
         const { email, password } = req.body;
 
-        validateEmail(email);
-        validateStrongPassword(password);
-
-        const user = await User.findOne({ email }).lean();
-
-        const isSamePassword = await decrypt(password, user?.passwordHash);
-
-        const payload = {
-            userId: user?._id,
-            email: user?.email,
-            mobileNumbe: user?.mobileNumber
+        if (!email || !password) {
+            throw new AppError(statusCodes.BAD_REQUEST, "Email and Password is required!")
         };
 
-        const token = await signin(payload);
+        zodSchemaValidator(zodSchemas.loginSchema, req.body)
+
+
+        const payload = await services.userService.login({ email, password });
+
+
 
         return res.status(statusCodes.OK).json(
             success_response(
                 statusCodes.OK,
                 "Successfully Signed In!",
-                {
-                    userId: user?.customId,
-                    token: signin
-                },
+                payload,
                 true
             )
         );
@@ -61,14 +55,13 @@ const createUser = catchAsync(async (req, res) => {
         const {
             fullName,
             email,
-            dateOfBirth,
             mobileNumber,
             gender,
             role,
             password,
         } = req.body
 
-        const data = zodSchemaValidator(zodSchemas.userRegistrationSchema, req.body);
+        zodSchemaValidator(zodSchemas.userRegistrationSchema, req.body);
 
         const payload = await services.userService.createUser(data);
 
@@ -79,9 +72,6 @@ const createUser = catchAsync(async (req, res) => {
                 payload,
             )
         )
-
-
-
     } catch (error) {
         console.log("Error while Creating User", error?.message);
         return res.status(error?.statusCode || statusCodes.INTERNAL_SERVER_ERROR).json(
@@ -95,9 +85,36 @@ const createUser = catchAsync(async (req, res) => {
 })
 
 
+const getAllUsers = catchAsync(async (req, res) => {
+    try {
+
+        const payload = await services.userService.getAllUsers();
+
+        return res.status(statusCodes.OK).json(
+            success_response(
+                statusCodes.OK,
+                "Successfully Fetched Users List",
+                payload,
+                true
+            )
+        )
+
+    } catch (error) {
+        console.log("Error while Fetching All Users", error?.message);
+        return res.status(error?.statusCode || statusCodes.INTERNAL_SERVER_ERROR).json(
+            failure_response(
+                error?.statusCode || statusCodes.INTERNAL_SERVER_ERROR,
+                "Failed to Fetch Users List",
+                { message: error?.message },
+            )
+        )
+    }
+})
+
 const userController = {
     createUser,
     login,
+    getAllUsers
 };
 
 module.exports = userController;

@@ -15,13 +15,13 @@ const userRegistrationSchema = z.object({
         .email("Please enter a valid email address")
         .max(254, "Email address is too long"),
 
-    dateOfBirth: z
-        .string()
-        .refine((val) => !isNaN(Date.parse(val)), "Invalid date format")
-        .refine((val) => {
-            const age = (Date.now() - new Date(val).getTime()) / (1000 * 60 * 60 * 24 * 365.25);
-            return age >= 16;
-        }, "You must be at least 16 years old to register"),
+    // dateOfBirth: z
+    //     .string()
+    //     .refine((val) => !isNaN(Date.parse(val)), "Invalid date format")
+    //     .refine((val) => {
+    //         const age = (Date.now() - new Date(val).getTime()) / (1000 * 60 * 60 * 24 * 365.25);
+    //         return age >= 16;
+    //     }, "You must be at least 16 years old to register"),
 
     mobileNumber: z
         .string()
@@ -53,8 +53,26 @@ const userRegistrationSchema = z.object({
         .regex(/[@$!%*?&#^()_+\-=[\]{};':"\\|,.<>/~`]/, "Password must contain at least one special character"),
 });
 
+const loginSchema = z.object({
+    email: z
+        .string()
+        .trim()
+        .toLowerCase()
+        .email("Please enter a valid email address")
+        .max(254, "Email address is too long"),
+
+    password: z
+        .string()
+        .min(8, "Password must be at least 8 characters long")
+        .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+        .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+        .regex(/\d/, "Password must contain at least one number")
+        .regex(/[@$!%*?&#^()_+\-=[\]{};':"\\|,.<>/~`]/, "Password must contain at least one special character"),
+})
+
 const zodSchemas = {
-    userRegistrationSchema
+    userRegistrationSchema,
+    loginSchema
 };
 
 module.exports = zodSchemas;

@@ -10,7 +10,7 @@ const encrypt = async (data) => {
 };
 
 
-const decrypt = async (data, hash) => {
+const compare = async (data, hash) => {
 
     const result = await bcrypt.compare(data, hash);
 
@@ -25,5 +25,5 @@ const generateSecretString = (bytes) => {
 
 module.exports = {
     encrypt,
-    decrypt
+    compare
 }

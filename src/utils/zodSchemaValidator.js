@@ -3,13 +3,13 @@ const { failure_response } = require("./response");
 const statusCodes = require("./statusCodes");
 
 
-const zodSchemaValidator = (schema, data, res) => {
+const zodSchemaValidator = (schema, data) => {
 
 
 
     const result = schema.safeParse(data);
 
-    // console.log(result, "RESULT");
+
     if (!result.success) {
         const errors = result.error.issues.map((e) => ({
             field: e.path[0],
