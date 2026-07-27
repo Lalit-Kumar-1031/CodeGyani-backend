@@ -65,7 +65,7 @@ class UserService {
 
         try {
 
-            const user = await User.findOne({ email }).select("passwordHash fullName customId email").lean();
+            const user = await User.findOne({ email }).select("passwordHash fullName customId email role").lean();
 
             if (!user) {
                 throw new AppError(statusCodes.BAD_REQUEST, "User Not Found!");
@@ -80,7 +80,8 @@ class UserService {
             const payload = {
                 fullName: user?.fullName,
                 customId: user?.customId,
-                email: user?.email
+                email: user?.email,
+                role: user?.role
             };
 
             const token = await signin(payload);
