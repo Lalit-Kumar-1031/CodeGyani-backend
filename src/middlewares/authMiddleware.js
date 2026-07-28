@@ -41,7 +41,6 @@ const verifyToken = async (req, res, next) => {
     }
 };
 
-
 const verifyAdmin = async (req, res, next) => {
 
     verifyToken(req, res, async () => {
