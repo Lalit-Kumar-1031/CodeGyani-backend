@@ -68,11 +68,34 @@ const loginSchema = z.object({
         .regex(/[a-z]/, "Password must contain at least one lowercase letter")
         .regex(/\d/, "Password must contain at least one number")
         .regex(/[@$!%*?&#^()_+\-=[\]{};':"\\|,.<>/~`]/, "Password must contain at least one special character"),
-})
+});
+
+const createTrainingSchema = z.object({
+    title: z.string()
+        .trim()
+        .min(1, 'Title is required'),
+
+    description: z.string()
+        .trim()
+        .min(1, 'Description is required'),
+
+    duration: z.string()
+        .trim()
+        .min(1, 'Duration is required'), // e.g. "6 months", "12 weeks"
+
+    fee: z.number()
+        .min(0, 'Fee cannot be negative'),
+
+    isActive: z.boolean()
+        .optional()
+        .default(true),
+});
+
 
 const zodSchemas = {
     userRegistrationSchema,
-    loginSchema
+    loginSchema,
+    createTrainingSchema
 };
 
 module.exports = zodSchemas;

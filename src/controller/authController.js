@@ -50,14 +50,16 @@ const verifyOTP = catchAsync(async (req, res) => {
         const { email } = req.params;
         const { referenceId, otp } = req.body;
 
-
+        if (!referenceId || !otp) {
+            throw new AppError(statusCodes.BAD_REQUEST, "ReferenceId and OTP is Required!")
+        };
 
         if (email && !validations.emailRegex(email)) {
             throw new AppError(statusCodes.BAD_REQUEST, "Invalid Email Format!");
         };
 
-        if (!referenceId || !otp) {
-            throw new AppError(statusCodes.BAD_REQUEST, "ReferenceId and OTP is Required!")
+        if (referenceId.length !== 13) {
+            throw new AppError(statusCodes.BAD_REQUEST, "Invalid ReferenceId Format!");
         };
 
         const payload = await services.authService.verifyOtp({ referenceId, email, otp });
@@ -82,7 +84,8 @@ const verifyOTP = catchAsync(async (req, res) => {
 
 
 const authController = {
-    sentOTP
+    sentOTP,
+    verifyOTP
 };
 
 module.exports = authController;

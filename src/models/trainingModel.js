@@ -8,6 +8,11 @@ const trainingSchema = new Schema(
       required: true,
       trim: true,
     },
+    customId: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     description: {
       type: String,
       required: true,
@@ -25,6 +30,15 @@ const trainingSchema = new Schema(
       type: Boolean,
       default: true,
     },
+    onBoaredBy: {
+      type: String,
+      required: true
+    },
+    onBoaredByUserId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
+    }
   },
   { timestamps: true } // auto adds createdAt & updatedAt
 );

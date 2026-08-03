@@ -85,7 +85,7 @@ class AuthService {
         }
 
         // 4. Success — invalidate OTP so it can't be reused
-        await OtpStore.deleteOne({ referenceId });
+        await Otp.deleteOne({ referenceId });
 
         return {
             email,
