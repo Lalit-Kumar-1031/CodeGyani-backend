@@ -32,7 +32,7 @@ class TrainingService {
         }
     }
 
-    async fetchTrainings({ query }) {
+    async fetchTrainings() {
         try {
             const { page = 1, limit = 10, isActive } = query || {};
 

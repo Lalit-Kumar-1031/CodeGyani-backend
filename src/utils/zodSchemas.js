@@ -92,10 +92,35 @@ const createTrainingSchema = z.object({
 });
 
 
+const createCourseSchema = z.object({
+
+    title: z.string()
+        .trim()
+        .min(1, 'Title is required'),
+
+    description: z.string()
+        .trim()
+        .min(1, 'Description is required'),
+
+    category: z.string()
+        .trim()
+        .min(1, 'Category is required'),
+
+    mode: z.enum(['online', 'offline', 'hybrid'], {
+        errorMap: () => ({ message: 'Mode must be online, offline, or hybrid' }),
+    }),
+
+    curriculum: z.array(z.string()).optional().default([]),
+
+    isActive: z.boolean().optional().default(true),
+});
+
+
 const zodSchemas = {
     userRegistrationSchema,
     loginSchema,
-    createTrainingSchema
+    createTrainingSchema,
+    createCourseSchema
 };
 
 module.exports = zodSchemas;

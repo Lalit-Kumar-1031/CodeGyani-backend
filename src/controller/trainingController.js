@@ -39,7 +39,7 @@ const createTraining = catchAsync(async (req, res) => {
 
 const fetchTrainings = catchAsync(async (req, res) => {
     try {
-        const payload = await services.trainingService.fetchTrainings({ query: req.query });
+        const payload = await services.trainingService.fetchTrainings();
 
         return res.status(statusCodes.OK).json(
             success_response(statusCodes.OK, "Successfully Fetched Trainings", payload, true)
@@ -54,6 +54,10 @@ const fetchTrainings = catchAsync(async (req, res) => {
 const fetchTraining = catchAsync(async (req, res) => {
     try {
         const { customId } = req.params;
+
+        if (!customIdValidators.validateCustomId('TR', id)) {
+            throw new AppError(statusCodes.BAD_REQUEST, "Invalid CustomId!")
+        }
 
         const payload = await services.trainingService.fetchTraining({ customId });
 
@@ -70,6 +74,11 @@ const fetchTraining = catchAsync(async (req, res) => {
 const updateTraining = catchAsync(async (req, res) => {
     try {
         const { customId } = req.params;
+
+        if (!customIdValidators.validateCustomId('TR', id)) {
+            throw new AppError(statusCodes.BAD_REQUEST, "Invalid CustomId!")
+        };
+
 
         zodSchemaValidator(zodSchemas.updateTrainingSchema, req.body);
 
@@ -88,6 +97,10 @@ const updateTraining = catchAsync(async (req, res) => {
 const deleteTraining = catchAsync(async (req, res) => {
     try {
         const { customId } = req.params;
+
+        if (!customIdValidators.validateCustomId('TR', id)) {
+            throw new AppError(statusCodes.BAD_REQUEST, "Invalid CustomId!")
+        };
 
         const payload = await services.trainingService.deleteTraining({ customId });
 
